@@ -30,7 +30,34 @@ public class RestController {
     }
 
     @PostMapping
-    public List<Pet> addPet(@RequestBody ){
+    public Pet addPet(@RequestBody Pet pet){
+        petsList.add(pet);
+        return pet; //исправить ?
 
+        /*
+        * Запрос в консоли для теста:
+        *
+        * fetch('/pet',{
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: 'Moni', type: 'dog', homeless:true })
+              }).then(result => result.json().then(console.log))
+        * */
+    }
+
+    @PutMapping("{id}")
+    public Pet updateDataPet(@PathVariable int id, @RequestBody Pet pet){
+        return petsList.set(id, pet);
+    }
+
+    @DeleteMapping("{id}")
+    public void deletePet(@PathVariable int id){
+        petsList.remove(id);
+
+        /*
+        * Пример запроса для теста
+        * fetch('/pet/0', {method: 'DELETE'}).then(res => console.log(res))
+        *
+        * */
     }
 }
