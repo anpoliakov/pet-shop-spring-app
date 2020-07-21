@@ -5,14 +5,14 @@ import by.anpoliakov.petshop.enumClasses.TypePet;
 public class Pet {
     private String name;
     private TypePet typePet;
-    private boolean ishomeless;
+    private boolean isHomeLess;
 
     public Pet() {}
 
-    public Pet(String name, String typePet, boolean ishomeless) {
+    public Pet(String name, String typePet, boolean isHomeLess) {
         this.name = name;
         this.typePet = getTypePetByString(typePet);
-        this.ishomeless = ishomeless;
+        this.isHomeLess = isHomeLess;
     }
 
     public String getName() {
@@ -31,12 +31,12 @@ public class Pet {
         this.typePet = getTypePetByString(typePet);
     }
 
-    public boolean isIshomeless() {
-        return ishomeless;
+    public boolean isHomeLess() {
+        return isHomeLess;
     }
 
-    public void setIshomeless(boolean ishomeless) {
-        this.ishomeless = ishomeless;
+    public void setHomeLess(boolean homeLess) {
+        this.isHomeLess = homeLess;
     }
 
     private TypePet getTypePetByString(String type){
@@ -45,6 +45,6 @@ public class Pet {
 
     @Override
     public String toString() {
-        return "PET: " + "name= " + name + ", type= " + typePet + ", isHomeLess= " + ishomeless + ".";
+        return "PET: " + "name= " + name + ", type= " + typePet + ", isHomeLess= " + isHomeLess + ".";
     }
 }
