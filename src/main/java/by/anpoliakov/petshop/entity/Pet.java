@@ -1,6 +1,6 @@
 package by.anpoliakov.petshop.entity;
 
-import by.anpoliakov.petshop.enumClasses.TypePet;
+import by.anpoliakov.petshop.enumClass.TypePet;
 
 public class Pet {
     private String name;

@@ -1,22 +1,25 @@
 package by.anpoliakov.petshop.controller;
 
 import by.anpoliakov.petshop.entity.Pet;
+import by.anpoliakov.petshop.repository.PetRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@org.springframework.web.bind.annotation.RestController
+@RestController
 @RequestMapping("/pet")
 public class PetController {
     private List<Pet> petsList;
+
+    @Autowired
+    private PetRepository petRepository;
 
     public PetController() {
         petsList = new ArrayList<>();
@@ -68,10 +71,10 @@ public class PetController {
     }
 
     //PATCH
-    @PatchMapping("{index}")
+    @PatchMapping(path = "{index}", consumes = "application/json-patch+json")
     public Pet updatePartDataPet(@PathVariable final int index, @RequestBody final JsonPatch jsonPatch){
         Pet updatingPet = petsList.get(index);
-
+        
         try {
             Pet newPet = applyPatchToPet(jsonPatch, updatingPet);
             return newPet;
