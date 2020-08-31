@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @org.springframework.web.bind.annotation.RestController
-@RequestMapping("/pet")
+@RequestMapping("/pet") // по URL получаю допуск: http://localhost:8080/pet
 public class PetController {
     private List<Pet> petsList;
 
@@ -22,6 +22,7 @@ public class PetController {
         petsList.add(new Pet("Monti","dog", true));
     }
 
+    //GET DEFAULT ALL
     @GetMapping
     public List<Pet> getAllPets(){
         return petsList;
@@ -39,18 +40,27 @@ public class PetController {
         petsList.add(pet);
         return pet;
 
-        /* Запрос для консоли браузера:
+        /* Request for the console:
         *
-        * fetch('/pet',{method: 'POST', headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ name: 'Moni', typePet: 'dog', homeless:true })
-                        }).then(result => result.json().then(console.log))
+        * fetch('/pet', {method: 'POST',
+        *                  headers: { 'Content-Type': 'application/json;charset=utf-8' },
+        *                  body: JSON.stringify({ name: 'V1', typePet: 'dog', homeless:true })}).then(result => result.json().then(console.log))
+        *
         * */
     }
 
-    //PUT
+    //PUT - обновить весь обьект
     @PutMapping("{index}")
     public Pet updateDataPet(@PathVariable final int index, @RequestBody final Pet pet){
         return petsList.set(index, pet);
+
+        /* Предназначен для вставки нового обьекта в определённое место
+        *
+        * fetch('/pet/0', {method: 'PUT',
+        *                  headers: { 'Content-Type': 'application/json;charset=utf-8' },
+        *                  body: JSON.stringify({ name: 'Moni', typePet: 'dog', homeless:true })}).then(result => result.json().then(console.log))
+        *
+        * */
     }
 
     //DELETE
@@ -65,17 +75,10 @@ public class PetController {
         * */
     }
 
-    //PATCH
-    @PatchMapping("{index}")
-    public Pet updatePartDataPet(@PathVariable final int index, @RequestBody final JsonPatch jsonPatch){
-        Pet updatingPet = petsList.get(index);
+    //PATCH - обновить часть обьекта
+    @PatchMapping(path = "/{index}", consumes = "application/json-patch+json")
+    public Pet updatePartDataPet(@PathVariable final int index, @RequestBody final Pet pet){
 
-        try {
-            Pet newPet = applyPatchToPet(jsonPatch, updatingPet);
-            return newPet;
-        } catch (JsonPatchException | JsonProcessingException e) {
-            return null;
-        }
 
         /*
         fetch("/pet/0", {
@@ -84,25 +87,6 @@ public class PetController {
             body: JSON.stringify({"op":"replace","path":"/name","value":"BOBIK"})
           }).then(result => result.json().then(console.log));
 
-
-         let objectPatch = {
-            op: "replace",
-            path: "/name",
-            value: "BOBIK"
-         }
-
-            fetch("/pet/0", {
-            method: "PATCH",
-            headers: {"Content-Type": "application/json-patch+json"},
-            body: JSON.stringify(objectPatch)
-            }).then(result => result.json().then(console.log));
         */
     }
-
-    private Pet applyPatchToPet(JsonPatch patch, Pet targetPet) throws JsonPatchException, JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode patched = patch.apply(mapper.convertValue(targetPet, JsonNode.class));
-        return mapper.treeToValue(patched, Pet.class);
-    }
-
 }

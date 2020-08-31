@@ -6,13 +6,7 @@
   <groupId>by.anpoliakov.petshop</groupId>
   <artifactId>pet-shop-spring-app</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <packaging>war</packaging>
-
-  <parent>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.3.1.RELEASE</version>
-  </parent>
+  <packaging>jar</packaging>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -20,34 +14,32 @@
     <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
 
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.3.1.RELEASE</version>
+  </parent>
+
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
 
-    //Для использования Json-patch
+    <!--  Служит для работы с библиотекой JSONPatch  -->
     <dependency>
       <groupId>com.github.java-json-tools</groupId>
       <artifactId>json-patch</artifactId>
-      <version>1.12</version>
+      <version>1.13</version>
     </dependency>
   </dependencies>
 
+  <!--плагин spring-boot-maven-plugin служит для удобной сборки jar приложения (для компановки и вклюбчения всех зависимостей в исполняемый файл)-->
   <build>
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
-
-        <executions>
-          <execution>
-            <goals>
-              <goal>repackage</goal>
-            </goals>
-          </execution>
-        </executions>
-
       </plugin>
     </plugins>
   </build>
