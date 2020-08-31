@@ -1,12 +1,7 @@
 package by.anpoliakov.petshop.controller;
 
-import by.anpoliakov.petshop.entity.Pet;
+import by.anpoliakov.petshop.model.Pet;
 import by.anpoliakov.petshop.repository.PetRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fge.jsonpatch.JsonPatch;
-import com.github.fge.jsonpatch.JsonPatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,15 +11,28 @@ import java.util.List;
 @RestController
 @RequestMapping("/pet")
 public class PetController {
-    private List<Pet> petsList;
 
     @Autowired
     private PetRepository petRepository;
+    private List<Pet> petsList;
 
     public PetController() {
         petsList = new ArrayList<>();
         petsList.add(new Pet("Tom", "cat", false));
         petsList.add(new Pet("Monti","dog", true));
+    }
+
+    @GetMapping("/getAll")
+    public Iterable<Pet> gettAll(){
+        Iterable<Pet> all = petRepository.findAll();
+        return all;
+    }
+
+    //поиск питомцев по имени
+    @GetMapping("find/{name}")
+    public List<Pet> findByNamePet(@PathVariable final String name){
+        List<Pet> byName = petRepository.findByName(name);
+        return byName;
     }
 
     @GetMapping
@@ -42,6 +50,7 @@ public class PetController {
     @PostMapping
     public Pet addPet(@RequestBody final Pet pet){
         petsList.add(pet);
+        petRepository.save(pet);
         return pet;
 
         /* Запрос для консоли браузера:
@@ -71,43 +80,43 @@ public class PetController {
     }
 
     //PATCH
-    @PatchMapping(path = "{index}", consumes = "application/json-patch+json")
-    public Pet updatePartDataPet(@PathVariable final int index, @RequestBody final JsonPatch jsonPatch){
-        Pet updatingPet = petsList.get(index);
-        
-        try {
-            Pet newPet = applyPatchToPet(jsonPatch, updatingPet);
-            return newPet;
-        } catch (JsonPatchException | JsonProcessingException e) {
-            return null;
-        }
+//    @PatchMapping(path = "{index}", consumes = "application/json-patch+json")
+//    public Pet updatePartDataPet(@PathVariable final int index, @RequestBody final JsonPatch jsonPatch){
+//        Pet updatingPet = petsList.get(index);
+//
+//        try {
+//            Pet newPet = applyPatchToPet(jsonPatch, updatingPet);
+//            return newPet;
+//        } catch (JsonPatchException | JsonProcessingException e) {
+//            return null;
+//        }
+//
+//        /*
+//        fetch("/pet/0", {
+//            method: "PATCH",
+//            headers: {"Content-Type": "application/json-patch+json"},
+//            body: JSON.stringify({"op":"replace","path":"/name","value":"BOBIK"})
+//          }).then(result => result.json().then(console.log));
+//
+//
+//         let objectPatch = {
+//            op: "replace",
+//            path: "/name",
+//            value: "BOBIK"
+//         }
+//
+//            fetch("/pet/0", {
+//            method: "PATCH",
+//            headers: {"Content-Type": "application/json-patch+json"},
+//            body: JSON.stringify(objectPatch)
+//            }).then(result => result.json().then(console.log));
+//        */
+//    }
 
-        /*
-        fetch("/pet/0", {
-            method: "PATCH",
-            headers: {"Content-Type": "application/json-patch+json"},
-            body: JSON.stringify({"op":"replace","path":"/name","value":"BOBIK"})
-          }).then(result => result.json().then(console.log));
-
-
-         let objectPatch = {
-            op: "replace",
-            path: "/name",
-            value: "BOBIK"
-         }
-
-            fetch("/pet/0", {
-            method: "PATCH",
-            headers: {"Content-Type": "application/json-patch+json"},
-            body: JSON.stringify(objectPatch)
-            }).then(result => result.json().then(console.log));
-        */
-    }
-
-    private Pet applyPatchToPet(JsonPatch patch, Pet targetPet) throws JsonPatchException, JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode patched = patch.apply(mapper.convertValue(targetPet, JsonNode.class));
-        return mapper.treeToValue(patched, Pet.class);
-    }
+//    private Pet applyPatchToPet(JsonPatch patch, Pet targetPet) throws JsonPatchException, JsonProcessingException {
+//        ObjectMapper mapper = new ObjectMapper();
+//        JsonNode patched = patch.apply(mapper.convertValue(targetPet, JsonNode.class));
+//        return mapper.treeToValue(patched, Pet.class);
+//    }
 
 }

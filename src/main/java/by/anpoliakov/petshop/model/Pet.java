@@ -1,12 +1,24 @@
-package by.anpoliakov.petshop.entity;
+package by.anpoliakov.petshop.model;
 
 import by.anpoliakov.petshop.enumClass.TypePet;
 
+import javax.persistence.*;
+
+@Entity //класс является JPA сущностью
 public class Pet {
+
+    @Id //поле является ID
+    @GeneratedValue(strategy = GenerationType.AUTO) //автоматическое увеличение ID
+    private int id;
+
     private String name;
+
+    @Enumerated(EnumType.STRING)
     private TypePet typePet;
+
     private boolean isHomeLess;
 
+    // У Entity всегда должен быть конструктор по умолчанию!
     public Pet() {}
 
     public Pet(String name, String typePet, boolean isHomeLess) {
