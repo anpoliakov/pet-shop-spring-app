@@ -9,22 +9,36 @@ public class Pet {
 
     @Id //поле является ID
     @GeneratedValue(strategy = GenerationType.AUTO) //автоматическое увеличение ID
-    private int id;
+    @Column(name = "id", nullable = false, unique = true)
+    private long id;
 
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING) //говорю что поле в БД будет являться ENUM
+    @Column(name = "typePet", nullable = false)
     private TypePet typePet;
 
-    private boolean isHomeLess;
+    @Column(name = "isHomeless", nullable = false)
+    private boolean isHomeless;
 
-    // У Entity всегда должен быть конструктор по умолчанию!
+    // У Entity всегда должен быть конструктор по умолчанию
     public Pet() {}
 
-    public Pet(String name, String typePet, boolean isHomeLess) {
+    public Pet(String name, String typePet, boolean isHomeless) {
         this.name = name;
         this.typePet = getTypePetByString(typePet);
-        this.isHomeLess = isHomeLess;
+        this.isHomeless = isHomeless;
+    }
+
+    //Особой роли конструкторы с параметрами, для GJSON не играют (используется default конструктор + внедрение значений через методы get and set)
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -39,24 +53,25 @@ public class Pet {
         return typePet;
     }
 
-    public void setTypePet(String typePet) {
-        this.typePet = getTypePetByString(typePet);
+    public void setTypePet(TypePet typePet) {
+        this.typePet = typePet;
     }
 
-    public boolean isHomeLess() {
-        return isHomeLess;
+    public boolean getIsHomeless() {
+        return isHomeless;
     }
 
-    public void setHomeLess(boolean homeLess) {
-        this.isHomeLess = homeLess;
+    public void setIsHomeless(boolean isHomeless) {
+        this.isHomeless = isHomeless;
     }
 
+    //убрать ? так как enum в mySQL используется напрямую ?
     private TypePet getTypePetByString(String type){
         return TypePet.valueOf(type.toUpperCase());
     }
 
     @Override
     public String toString() {
-        return "PET: " + "name= " + name + ", type= " + typePet + ", isHomeLess= " + isHomeLess + ".";
+        return "PET: ID(Data Base)= " + id + ", name= " + name + ", type= " + typePet + ", isHomeless= " + isHomeless + ".";
     }
 }

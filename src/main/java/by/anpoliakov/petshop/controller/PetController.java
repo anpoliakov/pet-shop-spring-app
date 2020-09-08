@@ -3,10 +3,10 @@ package by.anpoliakov.petshop.controller;
 import by.anpoliakov.petshop.model.Pet;
 import by.anpoliakov.petshop.repository.PetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/pet")
@@ -14,109 +14,61 @@ public class PetController {
 
     @Autowired
     private PetRepository petRepository;
-    private List<Pet> petsList;
 
-    public PetController() {
-        petsList = new ArrayList<>();
-        petsList.add(new Pet("Tom", "cat", false));
-        petsList.add(new Pet("Monti","dog", true));
+    public PetController() {}
+
+    // GET ALL PETS
+    @GetMapping //or @GetMapping("/") - тоже самое (вызов главной странички при переходе на сайт)
+    public Iterable<Pet> getAllPets(){
+       return petRepository.findAll();
     }
 
-    @GetMapping("/getAll")
-    public Iterable<Pet> gettAll(){
-        Iterable<Pet> all = petRepository.findAll();
-        return all;
-    }
-
-    //поиск питомцев по имени
-    @GetMapping("find/{name}")
-    public List<Pet> findByNamePet(@PathVariable final String name){
-        List<Pet> byName = petRepository.findByName(name);
-        return byName;
-    }
-
-    @GetMapping
-    public List<Pet> getAllPets(){
-        return petsList;
-    }
-
-    //GET
-    @GetMapping("{index:\\d+}") //Regex: error 404 if there isn't int value
-    public Pet getPetByIndex(@PathVariable final int index){
-        return petsList.get(index);
+    //GET ONE PET
+    @GetMapping("{id}")
+    public String getPetByID(Model model, @PathVariable final long id){
+        Pet pet = petRepository.findById(id).get();
+        model.addAttribute("testPet", pet.getName());
+        return "index"; //указываем имя шаблона, который необходимо будет открыть
     }
 
     //POST
     @PostMapping
-    public Pet addPet(@RequestBody final Pet pet){
-        petsList.add(pet);
-        petRepository.save(pet);
-        return pet;
+    public Pet addPet(@RequestBody Pet pet){
+        return petRepository.save(pet);
 
-        /* Запрос для консоли браузера:
-        *
-        * fetch('/pet',{method: 'POST', headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ name: 'Moni', typePet: 'dog', homeless:true })
+        /* fetch('/pet',{method: 'POST', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name: 'Moni', typePet: 'DOG', isHomeless:true})
                         }).then(result => result.json().then(console.log))
-        * */
+        */
     }
 
-    //PUT
-    @PutMapping("{index}")
-    public Pet updateDataPet(@PathVariable final int index, @RequestBody final Pet pet){
-        return petsList.set(index, pet);
+    //POST for UPDATE
+    @PostMapping("update/{id}")
+    public Pet addPet(@PathVariable final long id, @RequestBody Pet petFromClient){
+        try{
+            Pet petFromDB = petRepository.findById(id).get();
+            petFromDB.setName(petFromClient.getName());
+            petFromDB.setTypePet(petFromClient.getTypePet());
+            petFromDB.setIsHomeless(petFromClient.getIsHomeless());
+            return petRepository.save(petFromDB);
+        }catch (NoSuchElementException e){
+            System.out.println("EXCEPTION MY");
+            return null;
+        }
+
+        /* fetch('/pet/update/1',{method: 'POST', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name: 'Moni', typePet: 'DOG', isHomeless:true})
+                        }).then(result => result.json().then(console.log)) */
     }
 
     //DELETE
-    @DeleteMapping("{index}")
-    public void deletePet(@PathVariable int index){
-        petsList.remove(index);
-
-        /* Запрос для консоли браузера:
-        *
-        * fetch('/pet/0', {method: 'DELETE'}).then(res => console.log(res))
-        *
-        * */
+    @DeleteMapping("{id}")
+    public void deletePet(@PathVariable final long id){
+        petRepository.deleteById(id);
+        /* Запрос для консоли браузера: fetch('/pet/0', {method: 'DELETE'}).then(res => console.log(res)) */
     }
-
-    //PATCH
-//    @PatchMapping(path = "{index}", consumes = "application/json-patch+json")
-//    public Pet updatePartDataPet(@PathVariable final int index, @RequestBody final JsonPatch jsonPatch){
-//        Pet updatingPet = petsList.get(index);
-//
-//        try {
-//            Pet newPet = applyPatchToPet(jsonPatch, updatingPet);
-//            return newPet;
-//        } catch (JsonPatchException | JsonProcessingException e) {
-//            return null;
-//        }
-//
-//        /*
-//        fetch("/pet/0", {
-//            method: "PATCH",
-//            headers: {"Content-Type": "application/json-patch+json"},
-//            body: JSON.stringify({"op":"replace","path":"/name","value":"BOBIK"})
-//          }).then(result => result.json().then(console.log));
-//
-//
-//         let objectPatch = {
-//            op: "replace",
-//            path: "/name",
-//            value: "BOBIK"
-//         }
-//
-//            fetch("/pet/0", {
-//            method: "PATCH",
-//            headers: {"Content-Type": "application/json-patch+json"},
-//            body: JSON.stringify(objectPatch)
-//            }).then(result => result.json().then(console.log));
-//        */
-//    }
-
-//    private Pet applyPatchToPet(JsonPatch patch, Pet targetPet) throws JsonPatchException, JsonProcessingException {
-//        ObjectMapper mapper = new ObjectMapper();
-//        JsonNode patched = patch.apply(mapper.convertValue(targetPet, JsonNode.class));
-//        return mapper.treeToValue(patched, Pet.class);
-//    }
-
 }
+
+
+
+//QUESTION: PATCH и PUT при работе с JPA не работает ? пишет: "Request method 'PATCH' not supported" -> есть только ВСТАВКА, УДАЛЕНИЕ и ОБНОВЛЕНИЕ ?
