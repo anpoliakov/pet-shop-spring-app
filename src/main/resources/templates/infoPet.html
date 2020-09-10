@@ -1,0 +1,17 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
+<head>
+    <title>Information</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <center style="border: 3px solid black; padding: 10px;">
+        <h1>Information about pet № th: <span th:text="${pet.id}"></span></h1>
+        <p>
+            <b>Name:</b> <span th:text="${pet.name}"></span><br>
+            <b>Pet is homeless:</b> <span th:text="${pet.isHomeless}"></span><br>
+            <b>Pet's type:</b> <span th:text="${pet.typePet}"></span><br>
+        </p>
+    </center>
+</body>
+</html>
