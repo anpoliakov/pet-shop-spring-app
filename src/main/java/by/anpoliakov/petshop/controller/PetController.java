@@ -3,12 +3,13 @@ package by.anpoliakov.petshop.controller;
 import by.anpoliakov.petshop.model.Pet;
 import by.anpoliakov.petshop.repository.PetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.NoSuchElementException;
 
-@RestController
+@Controller
 @RequestMapping("/pet")
 public class PetController {
 
@@ -19,16 +20,18 @@ public class PetController {
 
     // GET ALL PETS
     @GetMapping //or @GetMapping("/") - тоже самое (вызов главной странички при переходе на сайт)
-    public Iterable<Pet> getAllPets(){
-       return petRepository.findAll();
+    //любая функция при использовании thymeleaf возвращает String (имя шаблона)
+    public String getAllPets(Model model){
+        model.addAttribute("pets", petRepository.findAll());
+        return "index";
     }
 
     //GET ONE PET
     @GetMapping("{id}")
     public String getPetByID(Model model, @PathVariable final long id){
         Pet pet = petRepository.findById(id).get();
-        model.addAttribute("testPet", pet.getName());
-        return "index"; //указываем имя шаблона, который необходимо будет открыть
+        model.addAttribute("pet", pet);
+        return "infoPet"; //указываем имя шаблона, который необходимо будет открыть
     }
 
     //POST
