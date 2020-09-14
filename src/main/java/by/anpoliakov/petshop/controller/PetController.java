@@ -34,6 +34,13 @@ public class PetController {
         return "infoPet"; //указываем имя шаблона, который необходимо будет открыть
     }
 
+    @GetMapping("/add")
+    public String getPageAddPet(Model model){
+        return "addPet";
+    }
+
+    //остановился на этом методе
+
     //POST
     @PostMapping
     public Pet addPet(@RequestBody Pet pet){
