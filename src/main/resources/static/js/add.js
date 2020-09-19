@@ -2,7 +2,7 @@ let sub_back = document.getElementById("submit_back");
 let sub_send = document.getElementById("submit_send");
 
 submit_back.onclick = () => {
-    window.location.href = 'index.html';
+    window.location.href = 'home.html';
 }
 
 sub_send.onclick = () => {
@@ -28,6 +28,6 @@ sub_send.onclick = () => {
     let jsonDataPet = JSON.stringify(data_pet);
     console.log(jsonDataPet);
     fetch('/pet',{method: 'POST', headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(jsonDataPet)
-                        }).then(result => result.json().then(console.log));
+        body: JSON.stringify(jsonDataPet)
+    }).then(result => result.json().then(console.log));
 }

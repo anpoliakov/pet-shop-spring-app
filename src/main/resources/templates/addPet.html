@@ -6,21 +6,23 @@
 </head>
 <body>
     <h1>Добавление нового питомца</h1>
-    <form>
-        <p>Имя: <input type="text" name="name" class="field"></p>
-        <p>Тип животного: <select size="1" name="typePet" class="field">
-            <option>DOG</option>
-            <option>ELEPHANT</option>
-            <option>CAT</option>
-        </select></p>
-        <p>Имеет ли дом: 
-            <span><input type="radio" value="true" name="isHomeless" class="fieldRadio" checked>Yes</span>
-            <span><input type="radio" value="false" name="isHomeless" class="fieldRadio">No</span>
-        </p>
-    </form>
-    <input type="submit" value="Back" id="submit_back">
-    <input type="submit" value="Send" id="submit_send">
+    <form action="/pet/add" method="POST">
+        <p>Имя: <input type="text" name="name" placeholder="Enter name"></p>
 
+        <p>Тип животного:
+            <select size="1" name="typePet">
+                <th:block th:each="type : ${T(by.anpoliakov.petshop.enumClass.TypePet).values()}">
+                    <option th:text="${type.name().toLowerCase()}" th:value="${type}"></option>
+                </th:block>
+            </select>
+        </p>
+
+        <p>Имеет ли дом: 
+            <span><input type="radio" value="true" name="isHomeless" checked> Yes </span>
+            <span><input type="radio" value="false" name="isHomeless"> No </span>
+        </p>
+        <button type="submit">Send</button>
+    </form>
 
     <script type="text/javascript" charset="UTF-8" src="../static/js/addPet.js"></script>
 </body>

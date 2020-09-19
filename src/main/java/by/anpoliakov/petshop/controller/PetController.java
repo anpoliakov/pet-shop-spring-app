@@ -1,5 +1,6 @@
 package by.anpoliakov.petshop.controller;
 
+import by.anpoliakov.petshop.enumClass.TypePet;
 import by.anpoliakov.petshop.model.Pet;
 import by.anpoliakov.petshop.repository.PetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,42 +15,37 @@ import java.util.NoSuchElementException;
 public class PetController {
 
     @Autowired
-    private PetRepository petRepository;
+    private PetRepository petRepository;          //репозиторий для работы с БД
 
     public PetController() {}
 
-    // GET ALL PETS
-    @GetMapping //or @GetMapping("/") - тоже самое (вызов главной странички при переходе на сайт)
-    //любая функция при использовании thymeleaf возвращает String (имя шаблона)
+    //GET ALL PETS (default method)               //любая функция при использовании thymeleaf возвращает String (имя шаблона)
+    @GetMapping                                   //or @GetMapping("/") - тоже самое (вызов главной странички при переходе на сайт)
     public String getAllPets(Model model){
         model.addAttribute("pets", petRepository.findAll());
-        return "index";
+        return "home";                            //имя страницы html в папке templates (к которой передаётся model)
     }
 
-    //GET ONE PET
+    //GET ONE PET BY ID
     @GetMapping("{id}")
     public String getPetByID(Model model, @PathVariable final long id){
         Pet pet = petRepository.findById(id).get();
         model.addAttribute("pet", pet);
-        return "infoPet"; //указываем имя шаблона, который необходимо будет открыть
+        return "infoPet";
     }
 
+    //PAGE FOR ENTER DATA ABOUT NEW PET
     @GetMapping("/add")
-    public String getPageAddPet(Model model){
+    public String getPageAdd(Model model){
         return "addPet";
     }
 
-    //остановился на этом методе
-
-    //POST
-    @PostMapping
-    public Pet addPet(@RequestBody Pet pet){
-        return petRepository.save(pet);
-
-        /* fetch('/pet',{method: 'POST', headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ name: 'Moni', typePet: 'DOG', isHomeless:true})
-                        }).then(result => result.json().then(console.log))
-        */
+    //CREATE NEW PET (PAGE "addPet.html")
+    @PostMapping("/add")
+    public String addPet(@RequestParam String name, @RequestParam String typePet, @RequestParam boolean isHomeless, Model model){
+        Pet newPet = new Pet(name, typePet, isHomeless);
+        petRepository.save(newPet);
+        return "redirect:/pet"; //переадресация пользователя на другой шаблон
     }
 
     //POST for UPDATE
@@ -81,4 +77,14 @@ public class PetController {
 
 
 
-//QUESTION: PATCH и PUT при работе с JPA не работает ? пишет: "Request method 'PATCH' not supported" -> есть только ВСТАВКА, УДАЛЕНИЕ и ОБНОВЛЕНИЕ ?
+/* QUESTION:
+    #PATCH и PUT при работе с JPA не работает ? пишет: "Request method 'PATCH' not supported" -> есть только ВСТАВКА, УДАЛЕНИЕ и ОБНОВЛЕНИЕ ?
+
+*/
+
+/* Что улучшить:
+*  Подгрузка возможных типов из properties файла и создание на неё ENUM класса ?
+*
+* */
+
+

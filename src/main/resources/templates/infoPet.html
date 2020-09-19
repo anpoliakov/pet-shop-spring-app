@@ -6,12 +6,17 @@
 </head>
 <body>
     <center style="border: 3px solid black; padding: 10px;">
-        <h1>Information about pet № th: <span th:text="${pet.id}"></span></h1>
+        <h1 th:text="'Information about pet № '+ ${pet.id}"> None </h1>
         <p>
-            <b>Name:</b> <span th:text="${pet.name}"></span><br>
-            <b>Pet is homeless:</b> <span th:text="${pet.isHomeless}"></span><br>
-            <b>Pet's type:</b> <span th:text="${pet.typePet}"></span><br>
+            <b>Name:</b>
+                <span th:text="${pet.name}"></span><br>
+            <b>Pet is homeless:</b>
+                <span th:text="${pet.isHomeless}"></span><br>
+            <b>Pet's type:</b>
+                <span th:text="${pet.typePet}"></span><br>
         </p>
+        <a th:href="@{'/pet'}"><button>Back</button></a>
     </center>
+    <div th:insert="footer :: footer"></div>
 </body>
 </html>
