@@ -1,6 +1,5 @@
 package by.anpoliakov.petshop.controller;
 
-import by.anpoliakov.petshop.enumClass.TypePet;
 import by.anpoliakov.petshop.model.Pet;
 import by.anpoliakov.petshop.repository.PetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,32 +44,34 @@ public class PetController {
     public String addPet(@RequestParam String name, @RequestParam String typePet, @RequestParam boolean isHomeless, Model model){
         Pet newPet = new Pet(name, typePet, isHomeless);
         petRepository.save(newPet);
-        return "redirect:/pet"; //переадресация пользователя на другой шаблон
+        //переадресация пользователя на другой шаблон
+        return "redirect:/pet";
     }
 
     //POST for UPDATE
-    @PostMapping("update/{id}")
-    public Pet addPet(@PathVariable final long id, @RequestBody Pet petFromClient){
-        try{
-            Pet petFromDB = petRepository.findById(id).get();
-            petFromDB.setName(petFromClient.getName());
-            petFromDB.setTypePet(petFromClient.getTypePet());
-            petFromDB.setIsHomeless(petFromClient.getIsHomeless());
-            return petRepository.save(petFromDB);
-        }catch (NoSuchElementException e){
-            System.out.println("EXCEPTION MY");
-            return null;
-        }
-
-        /* fetch('/pet/update/1',{method: 'POST', headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ name: 'Moni', typePet: 'DOG', isHomeless:true})
-                        }).then(result => result.json().then(console.log)) */
-    }
+//    @PostMapping("update/{id}")
+//    public Pet addPet(@PathVariable final long id, @RequestBody Pet petFromClient){
+//        try{
+//            Pet petFromDB = petRepository.findById(id).get();
+//            petFromDB.setName(petFromClient.getName());
+//            petFromDB.setTypePet(petFromClient.getTypePet());
+//            petFromDB.setIsHomeless(petFromClient.getIsHomeless());
+//            return petRepository.save(petFromDB);
+//        }catch (NoSuchElementException e){
+//            System.out.println("EXCEPTION MY");
+//            return null;
+//        }
+//
+//        /* fetch('/pet/update/1',{method: 'POST', headers: { 'Content-Type': 'application/json' },
+//                        body: JSON.stringify({ name: 'Moni', typePet: 'DOG', isHomeless:true})
+//                        }).then(result => result.json().then(console.log)) */
+//    }
 
     //DELETE
-    @DeleteMapping("{id}")
-    public void deletePet(@PathVariable final long id){
+    @GetMapping("/del/{id}")
+    public String deletePet(@PathVariable final long id){
         petRepository.deleteById(id);
+        return "redirect:/pet";
         /* Запрос для консоли браузера: fetch('/pet/0', {method: 'DELETE'}).then(res => console.log(res)) */
     }
 }
@@ -84,6 +85,7 @@ public class PetController {
 
 /* Что улучшить:
 *  Подгрузка возможных типов из properties файла и создание на неё ENUM класса ?
+*  Множественне выделение и удаление
 *
 * */
 

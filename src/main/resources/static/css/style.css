@@ -1,0 +1,50 @@
+body {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.fix-center{
+    text-align: center;
+}
+
+.add-important-color{
+    color: darkgoldenrod;
+}
+
+.fix-left-side-but{
+    margin-left: 8px;
+}
+
+.div-info-pet{
+    text-align: center;
+    border: solid 1px black;
+}
+
+.div_img{
+    height: 100px;
+    weight: 100px;
+    float: left;
+    background: darkgoldenrod;
+}
+
+.div_text{
+    float: left;
+}
+
+.main_div{
+    height: 300px;
+}
+
+.myColor1{
+    background: black;
+    height: 150px;
+    width: 300px;
+    float: left;
+}
+
+.myColor2{
+    background: green;
+    height: 150px;
+    width: 300px;
+    float: left;
+}

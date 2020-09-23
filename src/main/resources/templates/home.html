@@ -1,20 +1,61 @@
 <!DOCTYPE HTML>
-   <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
+   <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org" lang="en">
    <head>
-      <title>Home page</title>
-      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-      <link rel="stylesheet" type="text/css" href="../static/css/normalize.css">
+      <title>Animal shelter</title>
+       <meta charset="utf-8">
+       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+       <link rel="stylesheet" type="text/css" th:href="@{/css/normalize.css}">
+       <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+       <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
    </head>
    <body>
-      <a th:href="@{'/pet/add'}"><button>Add new pet</button></a>
-      <h3>ALL PETS: </h3>
-      <th:block th:each ="pet : ${pets}">
-         <div style="float:left" th:text="'Питомец в БД под ID: ' + ${pet.id} + ', и его имя: ' + ${pet.name}"></div>
-         <div style="float:left; padding-left: 10px;"><a th:href="'/pet/' + ${pet.id}"><button>Детальнее</button></a></div>
-         <br><br>
-      </th:block>
+      <div class="container">
+          <!-- Sitebar -->
+         <div class="header clearfix">
+           <nav>
+             <ul class="nav nav-pills pull-right">
+               <li role="presentation" class="active"><a th:href="@{'/pet'}">Home</a></li>
+               <li role="presentation"><a th:href="@{'/pet/add'}">Add</a></li>
+             </ul>
+           </nav>
+           <h3 class="text-muted text-title">Animal shelter</h3>
+           <hr>
+         </div>
 
-      <!--Говорим о том, что сюда подключается фрагмент кода, путь от templates -> footer -> :: -> имя куска кода -->
-      <div th:insert="footer :: footer"></div>
+          <!-- Body with pets -->
+          <div class="fix-center add-important-color">
+              <h1 class="display-2">PETS:</h1>
+          </div>
+
+          <th:block th:each ="pet : ${pets}">
+              <div class="jumbotron">
+                  <h2  th:text="'Name: ' + ${pet.name}"></h2>
+                  <p>Brief description, brief description</p>
+                  <a class="btn btn-lg btn-success" th:href="'/pet/' + ${pet.id}" role="button">Detailed</a>
+                  <a class="btn btn-lg btn-danger fix-left-side-but" th:href="'/pet/del/' + ${pet.id}" role="button">Delete</a>
+              </div>
+              <div class="div_img"></div>
+          </th:block>
+
+          <!-- Footer -->
+         <footer class="footer" th:insert="footer :: footer"></footer>
+       </div>
+
+      <!-- Optional JavaScript -->
+      <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+      <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
    </body>
 </html>
+
+
+<!--<th:block th:each ="pet : ${pets}">-->
+<!--    <div class="jumbotron">-->
+<!--        <h2  th:text="'Name: ' + ${pet.name}"></h2>-->
+<!--        <p>Brief description, brief description</p>-->
+<!--        <a class="btn btn-lg btn-success" th:href="'/pet/' + ${pet.id}" role="button">Detailed</a>-->
+<!--        <a class="btn btn-lg btn-danger fix-left-side-but" th:href="'/pet/del/' + ${pet.id}" role="button">Delete</a>-->
+<!--    </div>-->
+<!--    <div class="div_img"></div>-->
+<!--</th:block>-->
