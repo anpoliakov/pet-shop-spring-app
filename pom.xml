@@ -6,7 +6,6 @@
   <groupId>by.anpoliakov.petshop</groupId>
   <artifactId>pet-shop-spring-app</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <packaging>war</packaging>
 
   <parent>
     <groupId>org.springframework.boot</groupId>
@@ -18,12 +17,47 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
+    <java.version>1.8</java.version>
   </properties>
 
   <dependencies>
+    <!-- Шаблонизатор thymeleaf -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-thymeleaf</artifactId>
+    </dependency>
+
+    <!--  Spring Boot WEB  -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <!--Для использования JSON-patch-->
+    <dependency>
+      <groupId>com.github.java-json-tools</groupId>
+      <artifactId>json-patch</artifactId>
+      <version>1.13</version>
+    </dependency>
+
+    <!--Для работы с БД из Spring-->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-jpa</artifactId>
+      <version>2.3.1.RELEASE</version>
+    </dependency>
+
+    <!--  База данных mySQL  -->
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <!--Для быстрой перезагрузки контейнера и прочее-->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-devtools</artifactId>
     </dependency>
   </dependencies>
 
@@ -32,7 +66,6 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
-
         <executions>
           <execution>
             <goals>
@@ -40,8 +73,8 @@
             </goals>
           </execution>
         </executions>
-
       </plugin>
     </plugins>
   </build>
+
 </project>
