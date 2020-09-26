@@ -14,8 +14,8 @@
          <div class="header clearfix">
            <nav>
              <ul class="nav nav-pills pull-right">
-               <li role="presentation" class="active"><a th:href="@{'/pet'}">Home</a></li>
-               <li role="presentation"><a th:href="@{'/pet/add'}">Add</a></li>
+                 <li role="presentation" class="active"><a th:href="@{'/pet'}">Home</a></li>
+                 <li role="presentation"><a th:href="@{'/pet/add'}">Add</a></li>
              </ul>
            </nav>
            <h3 class="text-muted text-title">Animal shelter</h3>
@@ -32,6 +32,7 @@
                   <h2  th:text="'Name: ' + ${pet.name}"></h2>
                   <p>Brief description, brief description</p>
                   <a class="btn btn-lg btn-success" th:href="'/pet/' + ${pet.id}" role="button">Detailed</a>
+                  <a class="btn btn-lg btn-warning fix-left-side-but" th:href="'/pet/' + ${pet.id} + '/edit'" role="button">Edit</a>
                   <a class="btn btn-lg btn-danger fix-left-side-but" th:href="'/pet/del/' + ${pet.id}" role="button">Delete</a>
               </div>
               <div class="div_img"></div>
@@ -48,14 +49,3 @@
       <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
    </body>
 </html>
-
-
-<!--<th:block th:each ="pet : ${pets}">-->
-<!--    <div class="jumbotron">-->
-<!--        <h2  th:text="'Name: ' + ${pet.name}"></h2>-->
-<!--        <p>Brief description, brief description</p>-->
-<!--        <a class="btn btn-lg btn-success" th:href="'/pet/' + ${pet.id}" role="button">Detailed</a>-->
-<!--        <a class="btn btn-lg btn-danger fix-left-side-but" th:href="'/pet/del/' + ${pet.id}" role="button">Delete</a>-->
-<!--    </div>-->
-<!--    <div class="div_img"></div>-->
-<!--</th:block>-->

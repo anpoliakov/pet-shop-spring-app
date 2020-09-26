@@ -1,13 +1,12 @@
 package by.anpoliakov.petshop.controller;
 
+import by.anpoliakov.petshop.enumClass.TypePet;
 import by.anpoliakov.petshop.model.Pet;
 import by.anpoliakov.petshop.repository.PetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.NoSuchElementException;
 
 @Controller
 @RequestMapping("/pet")
@@ -28,6 +27,9 @@ public class PetController {
     //GET ONE PET BY ID
     @GetMapping("{id}")
     public String getPetByID(Model model, @PathVariable final long id){
+        if(!petRepository.existsById(id)){
+            return "redirect:/pet";
+        }
         Pet pet = petRepository.findById(id).get();
         model.addAttribute("pet", pet);
         return "infoPet";
@@ -48,24 +50,27 @@ public class PetController {
         return "redirect:/pet";
     }
 
-    //POST for UPDATE
-//    @PostMapping("update/{id}")
-//    public Pet addPet(@PathVariable final long id, @RequestBody Pet petFromClient){
-//        try{
-//            Pet petFromDB = petRepository.findById(id).get();
-//            petFromDB.setName(petFromClient.getName());
-//            petFromDB.setTypePet(petFromClient.getTypePet());
-//            petFromDB.setIsHomeless(petFromClient.getIsHomeless());
-//            return petRepository.save(petFromDB);
-//        }catch (NoSuchElementException e){
-//            System.out.println("EXCEPTION MY");
-//            return null;
-//        }
-//
-//        /* fetch('/pet/update/1',{method: 'POST', headers: { 'Content-Type': 'application/json' },
-//                        body: JSON.stringify({ name: 'Moni', typePet: 'DOG', isHomeless:true})
-//                        }).then(result => result.json().then(console.log)) */
-//    }
+    //EDIT
+    @GetMapping("{id}/edit")
+    public String getPageEditPet (@PathVariable final long id, Model model){
+        if(!petRepository.existsById(id)){
+            return "redirect:/pet";
+        }
+        Pet pet = petRepository.findById(id).get();
+        model.addAttribute("pet", pet);
+        return "editPet";
+    }
+
+    @PostMapping("{id}/edit")
+    public String petUpdate(@PathVariable final long id, @RequestParam final String name, @RequestParam final String typePet, @RequestParam final boolean isHomeless, Model model){
+        //находим существующий обьект - и обновляем
+        Pet pet = petRepository.findById(id).get();
+        pet.setName(name);
+        pet.setTypePet(TypePet.valueOf(typePet));
+        pet.setIsHomeless(isHomeless);
+        petRepository.save(pet);
+        return "redirect:/pet";
+    }
 
     //DELETE
     @GetMapping("/del/{id}")
